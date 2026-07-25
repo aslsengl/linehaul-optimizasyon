@@ -1,11 +1,12 @@
 # linehaul-optimizasyon
 TEKNOFEST 2026 - Yapay Zeka Destekli Lojistik Anahat Optimizasyonu | SANKA Takımı
+
 # 🚛 Yapay Zeka Destekli Lojistik Anahat Optimizasyonu
 **SANKA Takımı | TEKNOFEST 2026**
 
 ---
 
-## 📊 Toplam Maliyet
+## 📊 Temel İşlevli Çözüm (MVP) Toplam Maliyeti
 | Maliyet Kalemi | Tutar |
 |---|---|
 | Kiralık Araç Maliyeti | 802,744 TL |
@@ -14,55 +15,75 @@ TEKNOFEST 2026 - Yapay Zeka Destekli Lojistik Anahat Optimizasyonu | SANKA Takı
 
 ---
 
+## 🚀 Gelişmiş Çözüm Toplam Maliyeti
+| Maliyet Kalemi | Tutar |
+|---|---|
+| Kiralık Araç Maliyeti | 649,491 TL |
+| Spot Araç Maliyeti | 27,436,248 TL |
+| SLA Ceza | 0 TL |
+| **TOPLAM MALİYET** | **28,085,738.85 TL** |
+
+---
+
 ## 🎯 Proje Özeti
-HepsiJET linehaul operasyonları için 11-17 Mayıs 2026 haftasının
-talep tahmini ve spot araç optimizasyonu.
+HepsiJET linehaul operasyonları için yapay zeka destekli talep tahmini ve spot araç optimizasyonu.
+
+- **MVP:** 11-17 Mayıs 2026 haftası
+- **Gelişmiş:** 29 Haziran - 5 Temmuz 2026
 
 ---
 
 ## 🤖 Tahmin Modeli
-- **Algoritma:** LightGBM (XGBoost ile karşılaştırıldı, LightGBM kazandı)
+
+### MVP
+- **Algoritma:** LightGBM (XGBoost ile karşılaştırıldı)
 - **Doğrulama:** Walk Forward Validation (10 pencere)
-- **Ortalama MAE:** 2,862 desi
-- **Naive Baseline MAE:** 5,073 desi
-- **İyileşme:** %44
-- **Anormal günler:** Bayram ve eksik veri günleri temizlendi (8 gün)
-- **Feature'lar:** lag_7, lag_14, lag_21, rolling_mean_7, rolling_mean_14, rolling_std_7, HaftaninGunu, HaftaNo, Ay, YilinGunu, AyinGunu
+- **Ortalama MAE:** 2,862 desi | **Naive Baseline:** 5,073 desi | **İyileşme:** %44
+
+### Gelişmiş Çözüm
+- **Algoritma:** LightGBM (XGBoost ile karşılaştırıldı)
+- **Doğrulama:** Walk Forward Validation (17 pencere)
+- **Ortalama MAE:** 797 desi | **Naive Baseline:** 978 desi | **İyileşme:** %18
+- **Anormal günler:** Bayram ve eksik veri günleri temizlendi (14 gün)
+- **Feature'lar:** lag_7, lag_14, lag_21, rolling_mean_7, rolling_mean_14, rolling_std_7, HaftaninGunu, HaftaNo, Ay, YilinGunu, AyinGunu, saat_kodu
 
 ---
 
 ## ⚙️ Optimizasyon
-- **Yöntem:** Exhaustive Search (tüm araç tipleri karşılaştırılır, en ucuzu seçilir)
-- **Kiralık araçlar:** Her zaman önce kullanılır (zorunlu)
-- **Spot araçlar:** Min %10 doluluk kısıtı uygulandı
-- **Mesafe:** Haversine (kuş uçuşu) formülü
-- **Araç tipleri:** Tır, Kamyon, Hafif Kamyon, Kamyonet
-- **Dönüş rotası:** Hesaba katılmadı (şartname gereği)
+
+### MVP
+- Kiralık araçlar önce kullanılır
+- En ucuz spot araç seçimi
+- Min %10 doluluk kısıtı
+- Mesafe: Haversine
+
+### Gelişmiş Çözüm
+- Kiralık araçlar önce kullanılır (zorunlu)
+- 09:00 + 17:00 talepleri birleştirilerek maliyet düşürülür
+- Tır kapasitesi kısıtı ✅
+- Elleçleme kapasitesi kısıtı ✅
+- SLA ceza: 0.00 TL ✅
+- Maliyet: (Saatlik Kira × Kullanım Süresi) + (Km × Km Maliyeti)
+- Maliyet desi oranında dağıtılır
 
 ---
 
 ## 📁 Dosyalar
+
 | Dosya | Açıklama |
 |---|---|
-| `linehaul_optimizasyon_final.ipynb` | Tüm kodlar (tahmin + optimizasyon) |
-| `tahmin_11_17_mayis.xlsx` | 11-17 Mayıs tahmin çıktısı (623 satır) |
-| `arac_planlama_11_17_mayis.xlsx` | Araç planlama çıktısı (667 satır) |
-
----
-
-## 🔧 Varsayımlar
-- Her araç günde tek sefer yapar
-- Araçlar geri dönmez (tek yönlü)
-- Her TM'de sınırsız spot araç mevcuttur
-- Konsolidasyon uygulanmadı (MVP aşaması)
-- Mesafe: Haversine (kuş uçuşu)
-- Maliyet: Günlük Sabit + (Km × Km Maliyeti)
+| `linehaul_optimizasyon_final.ipynb` | MVP kodları |
+| `tahmin_11_17_mayis.xlsx` | MVP tahmin çıktısı (623 satır) |
+| `arac_planlama_11_17_mayis.xlsx` | MVP araç planı (667 satır) |
+| `SANKA_gelismis_cozum_FINAL.ipynb` | Gelişmiş çözüm kodları |
+| `SANKA_talep_tahmini_FINAL.xlsx` | Gelişmiş tahmin (4046 satır) |
+| `SANKA_tasima_plani_FINAL.xlsx` | Gelişmiş taşıma planı (4198 satır) |
 
 ---
 
 ## 📦 Kurulum
 ```bash
-pip install pandas numpy lightgbm xgboost scikit-learn openpyxl pulp
+pip install pandas numpy lightgbm xgboost scikit-learn openpyxl
 ```
 
 Google Colab'da çalıştırmak için:
